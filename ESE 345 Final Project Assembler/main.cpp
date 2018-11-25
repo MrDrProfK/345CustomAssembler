@@ -12,10 +12,10 @@
 #include <unordered_map>
 #include <bitset>
 #include <vector>
+#include <bitset>
 using namespace std;
 
-void assemble(string[]);
-string getInstrFormat (string);
+void assemble(vector<vector<string>>&);
 bool doErrorsExistInSource (const char *, vector<vector<string>>&);
 bool doErrorsExistInLineOfSource (vector<string>, int);
 bool isStrANumber(string);
@@ -25,26 +25,23 @@ bool is16BitSignedImmInRange(int);
 bool is4BitUnsignedImmInRange(int);
 //void writeBinaryFile(string[]);
 void trim(string&);
+string getInstrFormat (string);
+string getBinaryForOpPortion (string);
 
 int main(int argc, const char * argv[]) {
       vector<vector<string>> parsedAssembly;
-//      string linesOfAssemblyCode[32];
       if (doErrorsExistInSource (argv[1], parsedAssembly)) {
             return 1;
       }
-//      cout << linesOfAssemblyCode[0] << endl;
-//      cout << parsedAssembly.size() << endl;
       for (int i = 0; i < parsedAssembly.size(); i++) {
             for (int j = 0; j < parsedAssembly.at(i).size(); j++) {
                   cout << parsedAssembly.at(i).at(j) << " ";
             }
             cout << endl;
-//            cout << parsedAssembly.at(0).at(i) << " ";
       }
       
       cout << "No errors found. Assembling...\n";
-//      assemble(linesOfAssemblyCode);
-      //      cout << inputLine << " " << inputLine.length() << "\n";
+      assemble(parsedAssembly);
       return 0;
 }
 
@@ -55,7 +52,6 @@ bool doErrorsExistInSource (const char * filePath, vector<vector<string>> &parse
       string inputLine;
       int currentSourceCodeLineIndex = 1;
       
-//      string linesOfAssemblyCode[32];
       int validAssemblyCodeLineIndex = 0;
       while (getline(inputFileStream, inputLine) && validAssemblyCodeLineIndex < 32) {
             trim(inputLine);
@@ -68,28 +64,22 @@ bool doErrorsExistInSource (const char * filePath, vector<vector<string>> &parse
             assemblyArgs.push_back(tempArgStorage);
             while (getline(ss1, tempArgStorage, ',')) {
                   trim(tempArgStorage);
-                  //                  cout << assemblyArgs.size() << endl;
-                  //                  if (tempArgStorage.length() > 0) {
                   assemblyArgs.push_back(tempArgStorage);
-                  //                  }
             }
       
             if (inputLine.length() > 0) {
-                  errorExists = doErrorsExistInLineOfSource (assemblyArgs, currentSourceCodeLineIndex);
-//                  linesOfAssemblyCode[validAssemblyCodeLineIndex] = inputLine;
+                  if (doErrorsExistInLineOfSource (assemblyArgs, currentSourceCodeLineIndex)) {
+                        errorExists = true;
+                  }
                   vector<string> buildStrVector;
                   for (int i = 0; i < assemblyArgs.size(); i++) {
                         buildStrVector.push_back(assemblyArgs.at(i));
-//                        cout << assemblyArgs.at(0) << " ";
                   }
-//                  cout << endl;
                   parsedAssembly.push_back(buildStrVector);
-//                  cout << "Parsed Assembly Size: " << parsedAssembly.size() << endl;
                   validAssemblyCodeLineIndex++;
             }
             
             currentSourceCodeLineIndex++;
-            //            cout << inputLine << " " << inputLine.length() << "\n";
       }
       inputFileStream.close();
       return errorExists;
@@ -238,6 +228,7 @@ bool doErrorsExistInLineOfSource (vector<string> assemblyArgs, int currentSource
             }
       } else {
             cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid operation\n";
+//            cerr << "got em\n";
             errorExists = true;
       }
       
@@ -279,7 +270,7 @@ bool isRegNumInRange(int num) {
 }
 
 bool isLoadImmFieldPosInRange(int num) {
-      if (num >= 0 && num < 16) {
+      if (num >= 0 && num < 8) {
             return true;
       }
       return false;
@@ -299,49 +290,47 @@ bool is4BitUnsignedImmInRange(int num) {
       return false;
 }
 
-void assemble(string assemblyLangCode[]) {
-      //      ifstream inputFileStream(argv[1]);
-      //      string inputLine;
-      for (int i = 0; i < 32; i++) {
+void assemble(vector<vector<string>> &parsedAssembly) {
+      
+      vector<string> linesOfBinary;
+      
+      for (int i = 0; i < parsedAssembly.size(); i++) {
             
-            unordered_map<string, string> assemblyLangMap = {
-                  // load immediate instruction format
-                  {"li",     "0"},
-                  // R4 instruction format
-                  {"mal",    "10000"},
-                  {"mah",    "10001"},
-                  {"msl",    "10010"},
-                  {"msh",    "10011"},
-                  // R3 instruction format
-                  {"nop",    "1100000000"},
-                  {"bcw",    "1100000001"},
-                  {"and",    "1100000010"},
-                  {"or",     "1100000011"},
-                  {"popcnth","1100000100"},
-                  {"clz",    "1100000101"},
-                  {"rot",    "1100000110"},
-                  {"shlhi",  "1100000111"},
-                  {"a",      "1100001000"},
-                  {"sfw",    "1100001001"},
-                  {"ah",     "1100001010"},
-                  {"sfh",    "1100001011"},
-                  {"ahs",    "1100001100"},
-                  {"sfhs",   "1100001101"},
-                  {"mpyu",   "1100001110"},
-                  {"absdb",  "1100001111"}
-            };
+            string op = parsedAssembly.at(i).at(0);
+            string assembledBinaryLine = getBinaryForOpPortion(op);
             
-            string assembledBinaryLine = "";
-//            if (!instrFormatMap.at(assemblyLangCode[i]).compare("li")) {
-//                  assembledBinaryLine += "0";
+            if (!getInstrFormat(op).compare("li")) {
+//                  assembledBinaryLine += parsedAssembly.at(i).at(0);
 //                  cout << "It's alive!\n";
-//            } else if (!instrFormatMap.at(assemblyLangCode[i]).compare("r4")) {
-//                  assembledBinaryLine += "100";
-//            } else if (!instrFormatMap.at(assemblyLangCode[i]).compare("r3")) {
-//                  assembledBinaryLine += "110000";
-//            } else {
-//
-//            }
+                  assembledBinaryLine += bitset<3>(stoi(parsedAssembly.at(i).at(3))).to_string();
+                  assembledBinaryLine += bitset<16>(stoi(parsedAssembly.at(i).at(2))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
+//                  cout  << bitset<4>(stoi(parsedAssembly.at(i).at(3)))
+//                        << bitset<16>(stoi(parsedAssembly.at(i).at(2)))
+//                        << bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1)))
+//                        << endl;
+            } else if (!getInstrFormat(op).compare("r4")) {
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(4).substr(1))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(3).substr(1))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(2).substr(1))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
+            } else if (!getInstrFormat(op).compare("r3")) {
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(3).substr(1))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(2).substr(1))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
+            } else if (!getInstrFormat(op).compare("r3-2")) {
+                  assembledBinaryLine += "00000";
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(2).substr(1))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
+            } else if (!getInstrFormat(op).compare("r3-0")) {
+                  assembledBinaryLine += bitset<15>(0).to_string();
+            } else if (!getInstrFormat(op).compare("r3-i")) {
+                  assembledBinaryLine += "0";
+                  assembledBinaryLine += bitset<4>(stoi(parsedAssembly.at(i).at(2))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
+            }
+            cout << assembledBinaryLine << endl;
+            linesOfBinary.push_back(assembledBinaryLine);
       }
 }
 
@@ -377,4 +366,35 @@ string getInstrFormat (string key) {
             return instrFormatMap.at(key);
       }
       return "NULL";
+}
+
+string getBinaryForOpPortion (string key) {
+      
+      unordered_map<string, string> assemblyLangMap = {
+            // load immediate instruction format
+            {"li",     "0"},
+            // R4 instruction format
+            {"mal",    "10000"},
+            {"mah",    "10001"},
+            {"msl",    "10010"},
+            {"msh",    "10011"},
+            // R3 instruction format
+            {"nop",    "1100000000"},
+            {"bcw",    "1100000001"},
+            {"and",    "1100000010"},
+            {"or",     "1100000011"},
+            {"popcnth","1100000100"},
+            {"clz",    "1100000101"},
+            {"rot",    "1100000110"},
+            {"shlhi",  "1100000111"},
+            {"a",      "1100001000"},
+            {"sfw",    "1100001001"},
+            {"ah",     "1100001010"},
+            {"sfh",    "1100001011"},
+            {"ahs",    "1100001100"},
+            {"sfhs",   "1100001101"},
+            {"mpyu",   "1100001110"},
+            {"absdb",  "1100001111"}
+      };
+      return assemblyLangMap.at(key);
 }
