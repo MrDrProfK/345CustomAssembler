@@ -15,38 +15,50 @@
 #include <bitset>
 using namespace std;
 
-void assemble(vector<vector<string>>&);
-bool doErrorsExistInSource (const char *, vector<vector<string>>&);
+vector<string> assemble(vector<vector<string>>);
+bool doErrorsExistInSource (const char *, vector<vector<string>>&, bool);
 bool doErrorsExistInLineOfSource (vector<string>, int);
 bool isStrANumber(string);
 bool isRegNumInRange(int);
 bool isLoadImmFieldPosInRange(int);
 bool is16BitSignedImmInRange(int);
 bool is4BitUnsignedImmInRange(int);
-//void writeBinaryFile(string[]);
+void writeBinaryFile(vector<string>, const char *);
 void trim(string&);
 string getInstrFormat (string);
 string getBinaryForOpPortion (string);
 
 int main(int argc, const char * argv[]) {
+      
+      bool isDebugModeOn = false;
+      
       vector<vector<string>> parsedAssembly;
-      if (doErrorsExistInSource (argv[1], parsedAssembly)) {
+      cout << "Checking for errors in source code...\n";
+      if (doErrorsExistInSource (argv[1], parsedAssembly, isDebugModeOn)) {
             return 1;
       }
       for (int i = 0; i < parsedAssembly.size(); i++) {
             for (int j = 0; j < parsedAssembly.at(i).size(); j++) {
-                  cout << parsedAssembly.at(i).at(j) << " ";
+                  if (isDebugModeOn) {
+                        cout << parsedAssembly.at(i).at(j) << " ";
+                  }
             }
-            cout << endl;
+            if (isDebugModeOn) {
+                  cout << endl;
+            }
       }
-      
-      cout << "No errors found. Assembling...\n";
-      assemble(parsedAssembly);
+      cout << "No errors found.\n";
+      cout << "Assembling...\n";
+      writeBinaryFile(assemble(parsedAssembly), argv[1]);
+      cout << "Done.\n";
       return 0;
 }
 
-bool doErrorsExistInSource (const char * filePath, vector<vector<string>> &parsedAssembly){
-      cout << filePath << endl;
+bool doErrorsExistInSource (const char * filePath, vector<vector<string>> &parsedAssembly, bool isDebugModeOn) {
+      
+      if (isDebugModeOn) {
+            cout << filePath << endl;
+      }
       bool errorExists = false;
       ifstream inputFileStream(filePath);
       string inputLine;
@@ -290,7 +302,7 @@ bool is4BitUnsignedImmInRange(int num) {
       return false;
 }
 
-void assemble(vector<vector<string>> &parsedAssembly) {
+vector<string> assemble(vector<vector<string>> parsedAssembly) {
       
       vector<string> linesOfBinary;
       
@@ -300,15 +312,9 @@ void assemble(vector<vector<string>> &parsedAssembly) {
             string assembledBinaryLine = getBinaryForOpPortion(op);
             
             if (!getInstrFormat(op).compare("li")) {
-//                  assembledBinaryLine += parsedAssembly.at(i).at(0);
-//                  cout << "It's alive!\n";
                   assembledBinaryLine += bitset<3>(stoi(parsedAssembly.at(i).at(3))).to_string();
                   assembledBinaryLine += bitset<16>(stoi(parsedAssembly.at(i).at(2))).to_string();
                   assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
-//                  cout  << bitset<4>(stoi(parsedAssembly.at(i).at(3)))
-//                        << bitset<16>(stoi(parsedAssembly.at(i).at(2)))
-//                        << bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1)))
-//                        << endl;
             } else if (!getInstrFormat(op).compare("r4")) {
                   assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(4).substr(1))).to_string();
                   assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(3).substr(1))).to_string();
@@ -329,9 +335,10 @@ void assemble(vector<vector<string>> &parsedAssembly) {
                   assembledBinaryLine += bitset<4>(stoi(parsedAssembly.at(i).at(2))).to_string();
                   assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
             }
-            cout << assembledBinaryLine << endl;
+//            cout << assembledBinaryLine << endl;
             linesOfBinary.push_back(assembledBinaryLine);
       }
+      return linesOfBinary;
 }
 
 string getInstrFormat (string key) {
@@ -397,4 +404,16 @@ string getBinaryForOpPortion (string key) {
             {"absdb",  "1100001111"}
       };
       return assemblyLangMap.at(key);
+}
+
+void writeBinaryFile(vector<string> linesOfBinary, const char * consoleArg1) {
+      
+      string inputFile = consoleArg1;
+      string outputFile = inputFile.substr(0, inputFile.rfind(".fudor")) + ".binary";
+//      cout << outputFile << endl;
+      ofstream outputFileStream(outputFile);
+      for (int i = 0; i < linesOfBinary.size(); i++) {
+            outputFileStream << linesOfBinary.at(i) << "\n";
+      }
+      outputFileStream.close();
 }
