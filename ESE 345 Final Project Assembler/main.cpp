@@ -23,7 +23,7 @@ bool isRegNumInRange(int);
 bool isLoadImmFieldPosInRange(int);
 bool is16BitSignedImmInRange(int);
 bool is4BitUnsignedImmInRange(int);
-void writeBinaryFile(vector<string>, const char *);
+void writeBinaryFile(vector<string>, const char *, bool);
 void trim(string&);
 string getInstrFormat (string);
 string getBinaryForOpPortion (string);
@@ -32,24 +32,38 @@ int main(int argc, const char * argv[]) {
       
       bool isDebugModeOn = false;
       
+      if (argc < 2) {
+            cout << "Error: No source file specified.\n";
+            return 1;
+      }
+      
+      if (argc > 2) {
+            string arg2 = argv[2];
+            transform(arg2.begin(), arg2.end(), arg2.begin(), ::tolower); // to lowercase
+            if (!arg2.compare("--debug")) {
+                  isDebugModeOn = true;
+            }
+      }
+      
       vector<vector<string>> parsedAssembly;
       cout << "Checking for errors in source code...\n";
       if (doErrorsExistInSource (argv[1], parsedAssembly, isDebugModeOn)) {
             return 1;
       }
-      for (int i = 0; i < parsedAssembly.size(); i++) {
-            for (int j = 0; j < parsedAssembly.at(i).size(); j++) {
-                  if (isDebugModeOn) {
+      cout << "No errors found.\n";
+      
+      if (isDebugModeOn) {
+            cout << "\nParsed source code:" << endl;
+            for (int i = 0; i < parsedAssembly.size(); i++) {
+                  for (int j = 0; j < parsedAssembly.at(i).size(); j++) {
                         cout << parsedAssembly.at(i).at(j) << " ";
                   }
-            }
-            if (isDebugModeOn) {
                   cout << endl;
             }
+            cout << endl;
       }
-      cout << "No errors found.\n";
       cout << "Assembling...\n";
-      writeBinaryFile(assemble(parsedAssembly), argv[1]);
+      writeBinaryFile(assemble(parsedAssembly), argv[1], isDebugModeOn);
       cout << "Done.\n";
       return 0;
 }
@@ -57,15 +71,14 @@ int main(int argc, const char * argv[]) {
 bool doErrorsExistInSource (const char * filePath, vector<vector<string>> &parsedAssembly, bool isDebugModeOn) {
       
       if (isDebugModeOn) {
-            cout << filePath << endl;
+            cout << "Filepath: " << filePath << endl;
       }
       bool errorExists = false;
       ifstream inputFileStream(filePath);
       string inputLine;
       int currentSourceCodeLineIndex = 1;
       
-      int validAssemblyCodeLineIndex = 0;
-      while (getline(inputFileStream, inputLine) && validAssemblyCodeLineIndex < 32) {
+      while (getline(inputFileStream, inputLine)) {
             trim(inputLine);
             stringstream ss1(inputLine);
             
@@ -88,7 +101,6 @@ bool doErrorsExistInSource (const char * filePath, vector<vector<string>> &parse
                         buildStrVector.push_back(assemblyArgs.at(i));
                   }
                   parsedAssembly.push_back(buildStrVector);
-                  validAssemblyCodeLineIndex++;
             }
             
             currentSourceCodeLineIndex++;
@@ -406,11 +418,13 @@ string getBinaryForOpPortion (string key) {
       return assemblyLangMap.at(key);
 }
 
-void writeBinaryFile(vector<string> linesOfBinary, const char * consoleArg1) {
+void writeBinaryFile(vector<string> linesOfBinary, const char * consoleArg1, bool isDebugModeOn) {
       
       string inputFile = consoleArg1;
       string outputFile = inputFile.substr(0, inputFile.rfind(".fudor")) + ".binary";
-//      cout << outputFile << endl;
+      if (isDebugModeOn) {
+            cout << "Binary written to: " << outputFile << endl;
+      }
       ofstream outputFileStream(outputFile);
       for (int i = 0; i < linesOfBinary.size(); i++) {
             outputFileStream << linesOfBinary.at(i) << "\n";
