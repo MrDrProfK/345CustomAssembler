@@ -381,6 +381,7 @@ string getInstrFormat (string key) {
             {"mpyu",   "r3"},
             {"absdb",  "r3"}
       };
+      transform(key.begin(), key.end(), key.begin(), ::tolower); // to lowercase
       if (instrFormatMap.find(key) != instrFormatMap.end()) {
             return instrFormatMap.at(key);
       }
@@ -415,6 +416,7 @@ string getBinaryForOpPortion (string key) {
             {"mpyu",   "1100001110"},
             {"absdb",  "1100001111"}
       };
+      transform(key.begin(), key.end(), key.begin(), ::tolower); // to lowercase
       return assemblyLangMap.at(key);
 }
 
