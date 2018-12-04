@@ -191,6 +191,9 @@ bool doErrorsExistInLineOfSource (vector<string> assemblyArgs, int currentSource
                                     errorExists = true;
                               }
                         }
+                  } else {
+                        cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid argument syntax\n";
+                        errorExists = true;
                   }
             } else {
                   cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid number of arguments\n";
@@ -212,6 +215,9 @@ bool doErrorsExistInLineOfSource (vector<string> assemblyArgs, int currentSource
                               cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid register rs1 specified\n";
                               errorExists = true;
                         }
+                  } else {
+                        cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid argument syntax\n";
+                        errorExists = true;
                   }
             } else {
                   cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid number of arguments\n";
@@ -245,6 +251,9 @@ bool doErrorsExistInLineOfSource (vector<string> assemblyArgs, int currentSource
                               cerr << "Error: Line #" << currentSourceCodeLineIndex << ": immediate value is out of range\n";
                               errorExists = true;
                         }
+                  } else {
+                        cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid argument syntax\n";
+                        errorExists = true;
                   }
             } else {
                   cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid number of arguments\n";
@@ -252,7 +261,6 @@ bool doErrorsExistInLineOfSource (vector<string> assemblyArgs, int currentSource
             }
       } else {
             cerr << "Error: Line #" << currentSourceCodeLineIndex << ": invalid operation\n";
-//            cerr << "got em\n";
             errorExists = true;
       }
       
@@ -344,10 +352,11 @@ vector<string> assemble(vector<vector<string>> parsedAssembly) {
                   assembledBinaryLine += bitset<15>(0).to_string();
             } else if (!getInstrFormat(op).compare("r3-i")) {
                   assembledBinaryLine += "0";
-                  assembledBinaryLine += bitset<4>(stoi(parsedAssembly.at(i).at(2))).to_string();
+                  assembledBinaryLine += bitset<4>(stoi(parsedAssembly.at(i).at(3))).to_string();
+                  assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(2).substr(1))).to_string();
                   assembledBinaryLine += bitset<5>(stoi(parsedAssembly.at(i).at(1).substr(1))).to_string();
             }
-//            cout << assembledBinaryLine << endl;
+            
             linesOfBinary.push_back(assembledBinaryLine);
       }
       return linesOfBinary;
