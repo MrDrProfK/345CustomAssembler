@@ -3,7 +3,8 @@
 //  ESE 345 Final Project Assembler
 //
 //  Created by Aaron Knoll on 11/22/18.
-//  Copyright © 2018 Aaron Knoll. All rights reserved.
+//  Licensed under the GNU GPLv3
+//  (a copy of which is contained along with this application)
 //
 
 #include <iostream>
@@ -12,7 +13,6 @@
 #include <unordered_map>
 #include <bitset>
 #include <vector>
-#include <bitset>
 using namespace std;
 
 vector<string> assemble(vector<vector<string>>);
