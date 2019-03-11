@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:ESE 345 Final Project Assembler.xcodeproj">
+      location = "self:345CustomerAssembler.xcodeproj">
    </FileRef>
 </Workspace>

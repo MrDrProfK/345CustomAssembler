@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DE7ED3BC21A7841800570375 /* ESE 345 Final Project Assembler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ESE 345 Final Project Assembler"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE7ED3BC21A7841800570375 /* 345CustomerAssembler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 345CustomerAssembler; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE7ED3BF21A7841800570375 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,7 +41,7 @@
 		DE7ED3B321A7841800570375 = {
 			isa = PBXGroup;
 			children = (
-				DE7ED3BE21A7841800570375 /* ESE 345 Final Project Assembler */,
+				DE7ED3BE21A7841800570375 /* src */,
 				DE7ED3BD21A7841800570375 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,25 +49,25 @@
 		DE7ED3BD21A7841800570375 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DE7ED3BC21A7841800570375 /* ESE 345 Final Project Assembler */,
+				DE7ED3BC21A7841800570375 /* 345CustomerAssembler */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DE7ED3BE21A7841800570375 /* ESE 345 Final Project Assembler */ = {
+		DE7ED3BE21A7841800570375 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				DE7ED3BF21A7841800570375 /* main.cpp */,
 			);
-			path = "ESE 345 Final Project Assembler";
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DE7ED3BB21A7841800570375 /* ESE 345 Final Project Assembler */ = {
+		DE7ED3BB21A7841800570375 /* 345CustomerAssembler */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DE7ED3C321A7841800570375 /* Build configuration list for PBXNativeTarget "ESE 345 Final Project Assembler" */;
+			buildConfigurationList = DE7ED3C321A7841800570375 /* Build configuration list for PBXNativeTarget "345CustomerAssembler" */;
 			buildPhases = (
 				DE7ED3B821A7841800570375 /* Sources */,
 				DE7ED3B921A7841800570375 /* Frameworks */,
@@ -77,9 +77,9 @@
 			);
 			dependencies = (
 			);
-			name = "ESE 345 Final Project Assembler";
+			name = 345CustomerAssembler;
 			productName = "ESE 345 Final Project Assembler";
-			productReference = DE7ED3BC21A7841800570375 /* ESE 345 Final Project Assembler */;
+			productReference = DE7ED3BC21A7841800570375 /* 345CustomerAssembler */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -96,7 +96,7 @@
 					};
 				};
 			};
-			buildConfigurationList = DE7ED3B721A7841800570375 /* Build configuration list for PBXProject "ESE 345 Final Project Assembler" */;
+			buildConfigurationList = DE7ED3B721A7841800570375 /* Build configuration list for PBXProject "345CustomerAssembler" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -108,7 +108,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DE7ED3BB21A7841800570375 /* ESE 345 Final Project Assembler */,
+				DE7ED3BB21A7841800570375 /* 345CustomerAssembler */,
 			);
 		};
 /* End PBXProject section */
@@ -255,7 +255,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DE7ED3B721A7841800570375 /* Build configuration list for PBXProject "ESE 345 Final Project Assembler" */ = {
+		DE7ED3B721A7841800570375 /* Build configuration list for PBXProject "345CustomerAssembler" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DE7ED3C121A7841800570375 /* Debug */,
@@ -264,7 +264,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DE7ED3C321A7841800570375 /* Build configuration list for PBXNativeTarget "ESE 345 Final Project Assembler" */ = {
+		DE7ED3C321A7841800570375 /* Build configuration list for PBXNativeTarget "345CustomerAssembler" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DE7ED3C421A7841800570375 /* Debug */,
