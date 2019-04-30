@@ -1,0 +1,57 @@
+##--Test Assembly for the ESE 345 Final Project--##
+li $1, 0, 7
+li $1, 0, 6
+li $1, 0, 5
+li $1, 0, 4
+li $1, 0, 3
+li $1, 0, 2
+li $1, 0, 1
+li $1, 0, 0
+shlhi $1, $1, 4
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+
+# ---------
+# li $1, 2, 0
+# li $1, 5, 1
+# 
+# bcw $2, $1
+# nop
+# 
+# li $1, 7, 1
+# li $1, 3, 0
+# 
+# bcw $3, $1
+# mal $4, $1, $2, $3
+
+# ---------
+
+# mah $5, $1, $2, $3
+# msl $6, $1, $2, $3
+# msh $7, $1, $2, $3
+# li $1, 0, 1
+# and $8, $1, $2
+# 
+# or $9, $1, $2
+
